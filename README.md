@@ -16,7 +16,7 @@
 
 ## 每日新目標通知（2026-11-25 新增）
 
-工作流程：[`.github/workflows/notify-verified-targets.yml`](.github/workflows/notify-verified-targets.yml)，每天 **08:17 台灣時間**檢查一次（GitHub 排程可能延遲），也支援 Actions 頁面的 `Run workflow` 手動執行。
+工作流程：[`.github/workflows/notify-verified-targets.yml`](.github/workflows/notify-verified-targets.yml)，每天 **09:00 台灣時間**檢查一次（GitHub 排程可能延遲），也支援 Actions 頁面的 `Run workflow` 手動執行。
 
 通知方式：有首次出現、且完成資料核對及人工審核的目標，才建立一個 GitHub Issue。同一目標 ID 不會重複建立通知。沒有合格目標，不建立 Issue。
 

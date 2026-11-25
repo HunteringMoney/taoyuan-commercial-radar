@@ -9,6 +9,7 @@ on:
       - 'scripts/validate_official_commercial_boundary.py'
       - 'scripts/test_boundary.py'
       - 'scripts/discover_official_map.py'
+      - 'scripts/inspect_official_planning_service.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -69,6 +70,16 @@ jobs:
         with:
           name: municipal-official-map-discovery
           path: ${{ runner.temp }}/urban-map-endpoints.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Inspect official UPGIS zoning layer service
+        run: python scripts/inspect_official_planning_service.py
+      - name: Upload UPGIS layer schema report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-upgis-layer-schema
+          path: ${{ runner.temp }}/official-planning-layer-schema.json
           if-no-files-found: warn
           retention-days: 14
       - name: Send GitHub Issues only for approved new targets

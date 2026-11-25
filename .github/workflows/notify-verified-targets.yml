@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'scripts/probe_official_gis.py'
+      - 'scripts/integration_scoring.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -30,6 +31,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Validate integration scoring rules
+        run: python scripts/integration_scoring.py
       - name: Discover official GIS schema (never publish unverified targets)
         run: python scripts/probe_official_gis.py
       - name: Upload GIS diagnostic for review

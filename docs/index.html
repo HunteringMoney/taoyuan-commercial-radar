@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>桃園商業區土地獵人</title><meta name="theme-color" content="#153c33">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f3;color:#193d33;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}header{background:#153c33;color:white;padding:26px 18px}h1{font-size:26px;margin:8px 0}.muted{color:#677b72;font-size:14px;line-height:1.6}header p{font-size:14px;line-height:1.7}main{max-width:850px;margin:auto;padding:16px}.panel{background:#fff;border:1px solid #dce5df;border-radius:16px;padding:17px;margin-bottom:14px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.number{font-size:29px;font-weight:800}.tag{display:inline-block;background:#fbe6b1;color:#654400;border-radius:30px;padding:5px 10px;font-size:12px;font-weight:700}label{font-size:14px;font-weight:650;display:block;margin-top:10px}input,select,textarea{font:inherit;width:100%;padding:10px;margin:5px 0;border:1px solid #cbd8d0;border-radius:9px}button{font:inherit;border:0;background:#147456;color:white;border-radius:10px;padding:10px 14px;margin-top:8px;cursor:pointer}button.alt{background:#e4f1ea;color:#165840}a{color:#147456}article{border-top:1px solid #e5eee8;padding:12px 0}article:first-child{border-top:0}.warning{background:#fff6df;border-radius:10px;padding:12px;font-size:14px;line-height:1.6}h2{font-size:19px;margin:0 0 12px}footer{text-align:center;padding:15px}
+</style></head><body>
+<header><small>TAOYUAN · COMMERCIAL RADAR</small><h1>桃園商業區土地獵人</h1><span class="tag">測試版｜尚無正式掃描資料</span><p>桃園區「法定商業區」才可列入正式候選名單；住宅區及無法確認分區者，一律不納入。</p></header>
+<main><div class="stats"><div class="panel"><div class="muted">正式驗證候選目標</div><div id="count" class="number">0</div></div><div class="panel"><div class="muted">個人待勘查紀錄</div><div id="todo" class="number">0</div></div></div>
+<section class="panel"><h2>資料與服務狀態</h2><div class="warning">目前官方商業區圖資尚未接通並驗證。這個網站是可用的手機工作台，不代表 AI 已經自動找到任何實際基地；請勿將個人紀錄視作官方分區確認。</div><p class="muted" id="updated">官方資料：尚未產生</p><p><a href="https://urplanning.tycg.gov.tw/gisMap/" target="_blank" rel="noopener">桃園市都市計畫地理資訊服務網 ↗</a></p></section>
+<section class="panel"><h2>已驗證開發候選名單</h2><input id="search" placeholder="搜尋開發位置"><div id="targets"><p class="muted">目前沒有通過官方分區查核的候選目標。</p></div></section>
+<section class="panel"><h2>我的街廓勘查紀錄</h2><p class="muted">紀錄僅儲存在本裝置瀏覽器中，不會同步其他手機。請勿輸入地主姓名或聯絡方式。</p>
+<label>地址或街廓</label><input id="address" placeholder="例如：桃園區○○街附近">
+<label>分區確認</label><select id="zone"><option>尚未核對</option><option>已人工確認商業區</option><option>非商業區</option></select>
+<label>目前進度</label><select id="status"><option>待勘查</option><option>已勘查</option><option>需查證</option></select>
+<label>備註</label><textarea id="note" rows="2" placeholder="建物狀況、現勘觀察、待查項目"></textarea>
+<button id="add">新增紀錄</button> <button id="export" class="alt">匯出 JSON 備份</button><div id="notes"></div></section>
+<footer class="muted">土地獵人 v0.3 · 官方土地使用分區以主管機關資料為準</footer></main>
+<script>
+const $=id=>document.getElementById(id),key="commercial-radar-notes-v1";let notes=[];try{notes=JSON.parse(localStorage.getItem(key)||"[]");if(!Array.isArray(notes))notes=[]}catch(e){notes=[]}
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function save(){localStorage.setItem(key,JSON.stringify(notes));render()}
+function render(){const list=notes.filter(n=>n.zone!=="非商業區");$("todo").textContent=list.filter(n=>n.status==="待勘查").length;$("notes").innerHTML=list.length?list.map(n=>'<article><strong>'+esc(n.address)+'</strong><p class="muted">'+esc(n.zone)+' · '+esc(n.status)+'</p><p>'+esc(n.note)+'</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(n.address)+'">開啟地圖 ↗</a> <button class="alt" data-id="'+esc(n.id)+'">刪除</button></article>').join(""):'<p class="muted">目前沒有個人勘查紀錄。</p>';$("notes").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{notes=notes.filter(n=>n.id!==b.dataset.id);save()})}
+$("add").onclick=()=>{let address=$("address").value.trim();if(!address)return alert("請輸入街廓或地址");notes.unshift({id:String(Date.now()),address,zone:$("zone").value,status:$("status").value,note:$("note").value});$("address").value="";$("note").value="";save()};
+$("export").onclick=()=>{let a=document.createElement("a"),u=URL.createObjectURL(new Blob([JSON.stringify(notes,null,2)],{type:"application/json"}));a.href=u;a.download="勘查紀錄.json";a.click();setTimeout(()=>URL.revokeObjectURL(u),2000)};
+let targets=[];function show(){let q=$("search").value.trim();let list=targets.filter(t=>t.address.includes(q));$("targets").innerHTML=list.length?list.map(t=>'<article><strong>'+esc(t.address)+'</strong><p class="muted">'+esc(t.reason||"")+'</p><a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(t.address)+'" target="_blank">地圖定位 ↗</a></article>').join(""):'<p class="muted">沒有經官方分區驗證的目標。</p>';$("count").textContent=targets.length}
+$("search").addEventListener("input",show);
+fetch("targets.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("not found");return r.json()}).then(d=>{targets=(d.targets||[]).filter(t=>t.zone==="商業區"&&t.district==="桃園區"&&t.official_zoning_verified===true&&typeof t.address==="string");$("updated").textContent=d.generated_at?"官方名單更新："+d.generated_at:"官方資料：尚未產生";show()}).catch(()=>{$("updated").textContent="尚無官方資料或讀取失敗"});render()
+</script></body></html>

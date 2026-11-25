@@ -67,7 +67,8 @@ def run():
         report["error"] = str(exc)[:400]
         print("GIS connectivity/schema discovery blocked; no targets will be generated:", report["error"])
     OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    print("Diagnostic:", OUT, "status:", report["status"])\n    print("SCHEMA_SUMMARY:", json.dumps({"layers": report.get("layers", []), "layer_details": report.get("layer_details", [])}, ensure_ascii=False)[:12000])
+    print("Diagnostic:", OUT, "status:", report["status"])
+    print("SCHEMA_SUMMARY:", json.dumps({"layers": report.get("layers", []), "layer_details": report.get("layer_details", [])}, ensure_ascii=False)[:12000])
     print("Never publish unknown/unchecked records to docs/targets.json.")
 
 if __name__ == "__main__":

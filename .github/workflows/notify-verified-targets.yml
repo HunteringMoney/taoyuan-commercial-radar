@@ -8,6 +8,7 @@ on:
       - 'scripts/pilot_zoning_codes.py'
       - 'scripts/validate_official_commercial_boundary.py'
       - 'scripts/test_boundary.py'
+      - 'scripts/discover_official_map.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -58,6 +59,16 @@ jobs:
         with:
           name: commercial-zoning-pilot
           path: ${{ runner.temp }}/commercial-zoning-pilot.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Discover municipal official zoning map service endpoints
+        run: python scripts/discover_official_map.py
+      - name: Upload municipal map discovery report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: municipal-official-map-discovery
+          path: ${{ runner.temp }}/urban-map-endpoints.json
           if-no-files-found: warn
           retention-days: 14
       - name: Send GitHub Issues only for approved new targets

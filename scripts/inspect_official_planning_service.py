@@ -7,7 +7,7 @@ OUT=Path(os.getenv("RUNNER_TEMP","/tmp"))/"official-planning-layer-schema.json"
 def get(url, params=None):
  if params:url+="?"+urllib.parse.urlencode(params)
  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 Taoyuan GIS source audit"})
- with urllib.request.urlopen(req,timeout=26) as response:return json.load(response)
+ with urllib.request.urlopen(req,timeout=8) as response:return json.load(response)
 def main():
  result={"timestamp":datetime.datetime.now(datetime.timezone.utc).isoformat(),"base":BASE,"layers":[],"errors":[],"verified_commercial_geometry":False}
  try:
@@ -17,7 +17,7 @@ def main():
   result["layers"]=[{"id":x.get("id"),"name":x.get("name")} for x in layers]
   interesting=[x for x in layers if any(k in x.get("name","") for k in ["土地使用","使用分區","都市計畫","行政區","計畫區","分區","街廓"])]
   result["interesting_count"]=len(interesting)
-  for x in (interesting[:18]+[y for y in layers if y.get("id") in [0,22]])[:23]:
+  for x in (interesting[:4]+[y for y in layers if y.get("id") in [0,22]])[:6]:
    lid=x.get("id")
    try:
     d=get(f"{BASE}/{lid}",{"f":"json"})

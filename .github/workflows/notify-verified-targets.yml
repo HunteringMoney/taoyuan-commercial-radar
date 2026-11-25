@@ -2,8 +2,8 @@ name: 桃園商業區土地獵人｜新目標通知
 
 on:
   schedule:
-    # Taiwan time 08:17 (UTC+8); scheduled Actions may be delayed.
-    - cron: "17 0 * * *"
+    # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
+    - cron: "0 1 * * *"
   workflow_dispatch:
 
 permissions:

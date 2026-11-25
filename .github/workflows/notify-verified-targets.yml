@@ -1,6 +1,10 @@
 name: 桃園商業區土地獵人｜新目標通知
 
 on:
+  push:
+    paths:
+      - 'scripts/probe_official_gis.py'
+      - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
     - cron: "0 1 * * *"

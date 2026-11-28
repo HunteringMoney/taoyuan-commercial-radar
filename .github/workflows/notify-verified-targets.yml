@@ -19,6 +19,7 @@ on:
       - 'scripts/notify_verified_targets.py'
       - 'scripts/probe_official_network.py'
       - 'scripts/refresh_pilot.py'
+      - 'scripts/test_refresh_pilot.py'
       - 'scripts/sync_pilot_snapshot.py'
       - 'scripts/test_sync_pilot_snapshot.py'
       - 'docs/index.html'
@@ -60,6 +61,8 @@ jobs:
         run: cd scripts && python -m unittest test_pilot_scout.py -v
       - name: Test provisional snapshot fail-closed publishing
         run: cd scripts && python -m unittest test_sync_pilot_snapshot.py -v
+      - name: Test each selected building against public map zoning
+        run: cd scripts && python -m unittest test_refresh_pilot.py -v
       - name: Validate integration scoring rules
         run: python scripts/integration_scoring.py
       - name: Discover official GIS schema (never publish unverified targets)

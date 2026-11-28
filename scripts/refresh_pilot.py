@@ -161,9 +161,10 @@ def crosscheck_building_points(candidates, osm, opener=None, token=None, query=o
                 raise ValueError("Official point lookup is not wholly commercial")
             checked.append({"building_id": building_id, "point_lookup_sha256": point_hash,
                             "zoning_lookup_sha256": zone_hash})
-    if not checked:
+    if not checked and candidates.get("targets"):
         raise ValueError("No selected buildings to crosscheck")
-    return {"checked_building_count": len(checked), "status": "all_points_commercial_on_public_map",
+    return {"checked_building_count": len(checked),
+            "status": "all_points_commercial_on_public_map" if checked else "no_selected_buildings",
             "legal_verification": False, "checks": checked}
 
 

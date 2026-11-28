@@ -38,6 +38,14 @@ class PublicMapCrosscheckTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "not wholly commercial"):
             crosscheck_building_points(self.candidates, self.osm, object(), "test", query)
 
+    def test_genuine_zero_candidate_refresh_can_succeed(self):
+        def query(*_args, **_kwargs):
+            self.fail("No point lookups should run for zero candidates")
+
+        result = crosscheck_building_points({"targets": []}, self.osm, object(), "test", query)
+        self.assertEqual(result["checked_building_count"], 0)
+        self.assertEqual(result["status"], "no_selected_buildings")
+
 
 if __name__ == "__main__":
     unittest.main()

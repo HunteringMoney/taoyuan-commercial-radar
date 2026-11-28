@@ -1,6 +1,14 @@
 # 桃園商業區土地獵人｜實測與驗收進度
 
-最後更新：2026-11-25（台灣時間）
+最後更新：2026-11-28（台灣時間）
+
+## 2026-11-28 最新實測：本機可連線，GitHub Actions 仍逾時
+
+- Mac 本機連接市府 `TY_UPGIS/TYMap_SDE/MapServer` 回應 HTTP 200；第 1 層地籍圖 `section='0002' AND LANDNO8='00550001'` 唯一查得桃園段中南小段 55-1，多邊形質心 `(121.31213676,24.99562065)`。第 2 層都市計畫使用分區在地號中心及試驗候選中心均回傳 `LANDUSE=商業區`、`MUPLAN=桃園市都市計畫`。
+- 使用者截圖以七個市府使用分區圖形角點配準，留一誤差最高 2.00 公尺，已產生 106 個**草稿**紅區 GeoJSON 多邊形。與當下市府商業區圖形交集約 93.67%，另有約 8 平方公尺碰到住宅區邊界；搜尋程式必須同時以市府商業區圖形全包含建物，才可形成待查線索。
+- 小範圍 OSM 建物輪廓試跑：82 個 way，經半徑、官方商業區全包含與截圖紅區 95% 重合門檻後剩 9 個，可形成 **1 個真實可定位的待查建物群**，含 5 個 OSM 輪廓。來源及座標見 `docs/pilot_scout_candidates.json`；正式 `docs/targets.json` 仍空白。
+- [Actions run 46124368190](https://github.com/HunteringMoney/taoyuan-commercial-radar/actions/runs/46124368190) 的測試與既有排程全步驟成功，但其 `inspect_official_planning_service.py` 在 GitHub runner 上仍回報 `status=unreachable`、`<urlopen error timed out>`。**綠燈不代表雲端已取得官方 GIS 或每天能自動更新候選。** 目前實際資料取得只在本機小範圍試跑成功。
+- 詳細控制點、GeoJSON、來源雜湊、法定版本與授權待查事項，見 `docs/PILOT_GIS_2026-11-28.md`。以下 11/25 診斷保留作歷史紀錄，不能當成今日連線狀態。
 
 ## 實測已確認
 

@@ -1,6 +1,8 @@
 {
   "generated_at": null,
-  "verification_status": "official_zoning_data_not_connected",
+  "verification_status": "pilot_local_data_connected_pending_official_validation",
+  "cloud_gis_status": "unreachable_timeout_2026-11-28",
+  "pilot_candidates_file": "pilot_scout_candidates.json",
   "district": "桃園區",
   "allowed_zone": "商業區",
   "targets": []

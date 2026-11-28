@@ -14,6 +14,7 @@ import json
 import math
 from pathlib import Path
 from shapely.geometry import shape, mapping, Point
+from shapely.affinity import scale
 from shapely.ops import transform, unary_union
 from shapely.strtree import STRtree
 
@@ -32,14 +33,14 @@ def check_poly(feature):
 def xy_to_meters(g):
     # Local equirectangular approximation: topology in WGS84, grouping in metres.
     # Not for legal boundary measurements or development site area.
-    return transform(lambda x,y,z=None:(x*101000,y*111000),g)
+    return scale(g, xfact=101000, yfact=111000, origin=(0, 0))
 
-def discover(commercial, buildings, min_buildings=3, gap_m=8):
+def discover(commercial, buildings, min_buildings=3, gap_m=8, zoning_verified=True):
     if not commercial:
         return []
     zones=[]
     for f in commercial:
-        if (f.get("properties") or {}).get("verified_zoning_geometry") is not True:
+        if zoning_verified and (f.get("properties") or {}).get("verified_zoning_geometry") is not True:
             raise ValueError("Commercial input is not verified by the boundary validator")
         if (f.get("properties") or {}).get("使用分區") not in (
             "商業區","第一種商業區","第二種商業區","第三種商業區","第四種商業區"):
@@ -47,11 +48,13 @@ def discover(commercial, buildings, min_buildings=3, gap_m=8):
         zones.append(check_poly(f))
     boundary=unary_union(zones)
     footprints=[]
+    footprint_ids=[]
     for f in buildings:
         g=check_poly(f)
         # Fail closed on boundary crossings: centroid alone is not enough.
         if boundary.covers(g):
             footprints.append(g)
+            footprint_ids.append((f.get("properties") or {}).get("osm_id"))
     if not footprints:
         return []
     metric=[xy_to_meters(g) for g in footprints]
@@ -86,8 +89,9 @@ def discover(commercial, buildings, min_buildings=3, gap_m=8):
             "latitude":round(p.y,7),"longitude":round(p.x,7),
             "building_footprint_count":len(indices),
             "approx_total_roof_footprint_m2":built_area_m2,
-            "status":"screening_only_field_review_required",
-            "zone_basis":"official polygons checked by upstream validator",
+            "status":"screening_only_field_review_required" if zoning_verified else "pending_official_zoning_and_field_review",
+            "zone_basis":"official polygons checked by upstream validator" if zoning_verified else "municipal GIS live layer and registered screenshot draft; legal plan version pending",
+            "source_building_ids":[footprint_ids[i] for i in indices if footprint_ids[i] is not None],
             "reason":"相鄰建物輪廓集中，值得現場確認屋齡、道路與地號",
             "disclaimer":"非土地面積、非地籍基地、非危老資格或開發可行性認證"
         })

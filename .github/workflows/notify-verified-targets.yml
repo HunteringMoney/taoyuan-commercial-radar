@@ -10,6 +10,13 @@ on:
       - 'scripts/test_boundary.py'
       - 'scripts/discover_official_map.py'
       - 'scripts/inspect_official_planning_service.py'
+      - 'scripts/candidate_discovery.py'
+      - 'scripts/test_candidate_discovery.py'
+      - 'scripts/pilot_georeference.py'
+      - 'scripts/test_pilot_georeference.py'
+      - 'scripts/test_pilot_scout.py'
+      - 'scripts/pilot_scout.py'
+      - 'scripts/notify_verified_targets.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -36,12 +43,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install geometry test dependency
-        run: python -m pip install 'shapely>=2,<3'
+      - name: Install geometry and image test dependencies
+        run: python -m pip install 'shapely>=2,<3' 'numpy>=2,<3' 'opencv-python-headless>=4.10,<5'
       - name: Test official commercial boundary safety gates
         run: cd scripts && python -m unittest test_boundary.py -v
       - name: Test screened building clusters (synthetic data only)
         run: cd scripts && python -m unittest test_candidate_discovery.py -v
+      - name: Test screenshot calibration and color exclusions (synthetic data only)
+        run: cd scripts && python -m unittest test_pilot_georeference.py -v
+      - name: Test pilot zoning and red-mask joint filter (synthetic data only)
+        run: cd scripts && python -m unittest test_pilot_scout.py -v
       - name: Validate integration scoring rules
         run: python scripts/integration_scoring.py
       - name: Discover official GIS schema (never publish unverified targets)

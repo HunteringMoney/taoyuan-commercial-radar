@@ -83,7 +83,7 @@ def existing_marker_ids():
 def main():
     data = json.loads(DATA.read_text(encoding="utf-8"))
     if data.get("verification_status") != "official_zoning_verified":
-        print("SAFE STOP: official zoning dataset not connected/verified; no notifications.")
+        print("SAFE STOP: official zoning dataset is not fully verified; no notifications.")
         return
     all_targets = data.get("targets")
     if not isinstance(all_targets, list):

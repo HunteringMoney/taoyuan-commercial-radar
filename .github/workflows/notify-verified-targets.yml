@@ -16,6 +16,7 @@ on:
       - 'scripts/test_pilot_georeference.py'
       - 'scripts/test_pilot_scout.py'
       - 'scripts/pilot_scout.py'
+      - 'scripts/notify_verified_targets.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T09:05:24.449610+00:00",
+  "generated_at": "2026-11-28T09:35:14.633345+00:00",
   "status": "provisional_real_location_leads_pending_verification",
   "anchor_source": "https://urplanning.tycg.gov.tw/gisMap/Map.aspx",
   "anchor_parcel": "桃園段中南小段 55-1",
@@ -47,6 +47,38 @@
     "Cadastral boundaries for each group",
     "Field review"
   ],
+  "official_point_crosscheck": {
+    "checked_building_count": 5,
+    "status": "all_points_commercial_on_public_map",
+    "legal_verification": false,
+    "checks": [
+      {
+        "building_id": 1302296904,
+        "point_lookup_sha256": "55bbd2a9f7629576e79906368e885a24810edece20a0fffde57d54e2578d4186",
+        "zoning_lookup_sha256": "78cc0c01428b4b5e40c8d06ce77f47cd00ea036062869de6090ae005812c08a0"
+      },
+      {
+        "building_id": 1302296905,
+        "point_lookup_sha256": "55bbd2a9f7629576e79906368e885a24810edece20a0fffde57d54e2578d4186",
+        "zoning_lookup_sha256": "78cc0c01428b4b5e40c8d06ce77f47cd00ea036062869de6090ae005812c08a0"
+      },
+      {
+        "building_id": 1302296906,
+        "point_lookup_sha256": "55bbd2a9f7629576e79906368e885a24810edece20a0fffde57d54e2578d4186",
+        "zoning_lookup_sha256": "78cc0c01428b4b5e40c8d06ce77f47cd00ea036062869de6090ae005812c08a0"
+      },
+      {
+        "building_id": 1431640359,
+        "point_lookup_sha256": "34285657e7df1e6101ececaede3014619a9b4314aeb2a22f9db47d987c163102",
+        "zoning_lookup_sha256": "78cc0c01428b4b5e40c8d06ce77f47cd00ea036062869de6090ae005812c08a0"
+      },
+      {
+        "building_id": 1431640360,
+        "point_lookup_sha256": "0bae2e1e78c49d729df6960bb68d0421c1d02bb50e35fd2b825dd1770b9805ee",
+        "zoning_lookup_sha256": "2d16284e8d213b08a9c504d1fcf3cfea8a058ff63d8e96cf808fab739d50a9f1"
+      }
+    ]
+  },
   "official_query": {
     "map_url": "https://urplanning.tycg.gov.tw/gisMap/Map.aspx",
     "district": "桃園區",
@@ -67,8 +99,8 @@
   "osm_query": {
     "endpoint": "https://overpass-api.de/api/interpreter",
     "query": "[out:json][timeout:45];way[\"building\"](24.9924675,121.3086714,24.9987738,121.3156021);out geom;",
-    "response_sha256": "6e5c24e16ccb6a496a6ccbf31a95205f30b1fe6e5a362519a1050947d3b799e7",
-    "osm_timestamp": "2026-11-28T09:04:20Z",
+    "response_sha256": "abaa7fd37b001f8073fdd1cb202a86746517724db2463d3d77ff91f5f4ab0f11",
+    "osm_timestamp": "2026-11-28T09:33:51Z",
     "license": "ODbL; © OpenStreetMap contributors",
     "prior_endpoint_errors": []
   }

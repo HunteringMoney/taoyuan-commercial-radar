@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-11-28T07:49:52.269277+00:00",
+  "status": "provisional_real_location_leads_pending_verification",
+  "anchor_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/1",
+  "anchor_parcel": "桃園段中南小段 55-1",
+  "anchor_centroid": [
+    121.31213676,
+    24.99562065
+  ],
+  "pilot_radius_m": 350,
+  "municipal_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2",
+  "osm_source": "https://www.openstreetmap.org/copyright",
+  "osm_ways_in_export": 82,
+  "commercial_polygons_selected": 40,
+  "buildings_wholly_inside_commercial_and_radius": 14,
+  "candidate_count": 1,
+  "targets": [
+    {
+      "id": "scout-001",
+      "latitude": 24.9961143,
+      "longitude": 121.3126472,
+      "building_footprint_count": 6,
+      "approx_total_roof_footprint_m2": 3080.2,
+      "status": "pending_official_zoning_and_field_review",
+      "zone_basis": "municipal GIS live layer; plan version and screenshot alignment pending",
+      "source_building_ids": [
+        1302296903,
+        1302296904,
+        1302296905,
+        1302296906,
+        1431640359,
+        1431640360
+      ],
+      "reason": "相鄰建物輪廓集中，值得現場確認屋齡、道路與地號",
+      "disclaimer": "非土地面積、非地籍基地、非危老資格或開發可行性認證",
+      "maps_url": "https://www.openstreetmap.org/?mlat=24.9961143&mlon=121.3126472#map=18/24.9961143/121.3126472",
+      "building_source": "OpenStreetMap contributors (ODbL)",
+      "building_source_url": "https://www.openstreetmap.org/copyright",
+      "parcel_no": null,
+      "building_age": null,
+      "legal_zone_verified": false
+    }
+  ],
+  "pending": [
+    "Screenshot control-point registration",
+    "Official plan effective version and zoning crosscheck",
+    "Cadastral boundaries for each group",
+    "Field review"
+  ]
+}

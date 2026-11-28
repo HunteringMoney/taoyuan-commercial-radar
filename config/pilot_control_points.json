@@ -1,0 +1,11 @@
+{
+  "image_sha256": "3dade1e01de1553a757f5c2dfcdb1b53e61a361812cbf3301e388b562373d404",
+  "image_pixels": [886, 726],
+  "anchor_locator": {
+    "parcel": "桃園段中南小段55-1",
+    "official_centroid_lon_lat": [121.31213676, 24.99562065],
+    "image_pin_approx_pixel": [502, 225],
+    "note": "The drawn pin is not an independently identified parcel corner or control point."
+  },
+  "control_points": []
+}

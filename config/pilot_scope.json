@@ -7,12 +7,18 @@
     "section": "桃園段中南小段",
     "parcel_no": "55-1",
     "locator_source": "使用者上傳都市計畫分區截圖",
-    "coordinates": null,
-    "cadastre_verified": false
+    "coordinates": [121.31213676, 24.99562065],
+    "cadastre_verified": true,
+    "cadastre_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/1",
+    "cadastre_query": "section = '0002' AND LANDNO8 = '00550001'",
+    "cadastre_crs": "EPSG:4326",
+    "cadastre_checked_at": "2026-11-28"
   },
   "visual_scope": {
     "description": "僅限使用者提供圖上桃園都市計畫核心及南側紅色街廓；黃色、紫色、綠色與道路等非紅色部分排除",
     "source": "2026-11-28 使用者提供、圖面標示桃園段中南小段55-1地號",
+    "image_sha256": "3dade1e01de1553a757f5c2dfcdb1b53e61a361812cbf3301e388b562373d404",
+    "image_pixels": [886, 726],
     "georeferenced": false,
     "polygon_file": null
   },
@@ -22,7 +28,7 @@
     "分區不明",
     "其他非商業區"
   ],
-  "release_status": "blocked_pending_georeferencing_and_official_zoning",
+  "release_status": "provisional_scout_only_pending_screenshot_registration_and_plan_review",
   "next_steps": [
     "用地籍圖定位55-1取得可查核座標",
     "用官方都市計畫分區圖核對圖例、計畫版本及紅色區塊",

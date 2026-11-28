@@ -22,7 +22,10 @@ from shapely.ops import transform
 from pilot_scout import build
 
 MAP_BASE = "https://urplanning.tycg.gov.tw/gisMap/"
-OVERPASS = "https://overpass-api.de/api/interpreter"
+OVERPASS_ENDPOINTS = (
+    "https://overpass-api.de/api/interpreter",
+    "https://ovp.dresel.systems/api-as/interpreter",
+)
 PARCEL = {"section": "0002", "land": "00550001"}
 TRANSFORM = Transformer.from_crs("EPSG:3826", "EPSG:4326", always_xy=True)
 
@@ -104,16 +107,22 @@ def fetch_osm(anchor, radius_m=350):
     south, north = lat - radius_m / 111000, lat + radius_m / 111000
     west, east = lon - radius_m / 101000, lon + radius_m / 101000
     query = f'[out:json][timeout:45];way["building"]({south:.7f},{west:.7f},{north:.7f},{east:.7f});out geom;'
-    req = urllib.request.Request(OVERPASS, data=urllib.parse.urlencode({"data": query}).encode(), headers={
-        "User-Agent": "TaoyuanCommercialRadar/0.2 (bounded public pilot)", "Accept": "application/json"})
-    with urllib.request.urlopen(req, timeout=65) as response:
-        raw = response.read(8_000_000)
-    data = json.loads(raw)
-    if "elements" not in data or data.get("remark"):
-        raise ValueError("OSM building query incomplete or failed")
-    return data, {"endpoint": OVERPASS, "query": query, "response_sha256": hashlib.sha256(raw).hexdigest(),
-                  "osm_timestamp": data.get("osm3s", {}).get("timestamp_osm_base"),
-                  "license": "ODbL; © OpenStreetMap contributors"}
+    errors = []
+    for endpoint in OVERPASS_ENDPOINTS:
+        try:
+            req = urllib.request.Request(endpoint, data=urllib.parse.urlencode({"data": query}).encode(), headers={
+                "User-Agent": "TaoyuanCommercialRadar/0.2 (bounded public pilot)", "Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=65) as response:
+                raw = response.read(8_000_000)
+            data = json.loads(raw)
+            if "elements" not in data or data.get("remark"):
+                raise ValueError("OSM building query incomplete or failed")
+            return data, {"endpoint": endpoint, "query": query, "response_sha256": hashlib.sha256(raw).hexdigest(),
+                          "osm_timestamp": data.get("osm3s", {}).get("timestamp_osm_base"),
+                          "license": "ODbL; © OpenStreetMap contributors", "prior_endpoint_errors": errors}
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append({"endpoint": endpoint, "error": str(exc)[:160]})
+    raise ValueError("All OSM building endpoints failed: " + json.dumps(errors, ensure_ascii=False))
 
 
 def refresh(red_scope, output, report_path):

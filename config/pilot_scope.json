@@ -1,0 +1,33 @@
+{
+  "scope_id": "taoyuan_old_town_red_commercial_20261125",
+  "scope_name": "桃園都市計畫中心紅色商業區（使用者提供圖示）",
+  "district": "桃園區",
+  "city": "桃園市",
+  "anchor_parcel": {
+    "section": "桃園段中南小段",
+    "parcel_no": "55-1",
+    "locator_source": "使用者上傳都市計畫分區截圖",
+    "coordinates": null,
+    "cadastre_verified": false
+  },
+  "visual_scope": {
+    "description": "僅限使用者提供圖上桃園都市計畫核心及南側紅色街廓；黃色、紫色、綠色與道路等非紅色部分排除",
+    "source": "2026-11-28 使用者提供、圖面標示桃園段中南小段55-1地號",
+    "georeferenced": false,
+    "polygon_file": null
+  },
+  "permitted_zone": "商業區",
+  "exclude_zones": [
+    "住宅區",
+    "分區不明",
+    "其他非商業區"
+  ],
+  "release_status": "blocked_pending_georeferencing_and_official_zoning",
+  "next_steps": [
+    "用地籍圖定位55-1取得可查核座標",
+    "用官方都市計畫分區圖核對圖例、計畫版本及紅色區塊",
+    "使用至少3個以上分布良好的控制點校正截圖並量化誤差",
+    "將紅色街廓轉為初步GIS多邊形，再和法定商業區官方資料交叉核對",
+    "在驗證完成前只能生成待查勘線索，不得發布為官方驗證基地"
+  ]
+}

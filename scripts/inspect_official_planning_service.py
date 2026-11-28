@@ -7,7 +7,9 @@ OUT=Path(os.getenv("RUNNER_TEMP","/tmp"))/"official-planning-layer-schema.json"
 def get(url, params=None):
  if params:url+="?"+urllib.parse.urlencode(params)
  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 Taoyuan GIS source audit"})
- with urllib.request.urlopen(req,timeout=8) as response:return json.load(response)
+ # A cold connection to this service has taken about ten seconds locally.
+ # Eight seconds caused every GitHub runner probe to report a false timeout.
+ with urllib.request.urlopen(req,timeout=30) as response:return json.load(response)
 def main():
  result={"timestamp":datetime.datetime.now(datetime.timezone.utc).isoformat(),"base":BASE,"layers":[],"errors":[],"verified_commercial_geometry":False}
  try:
@@ -22,7 +24,7 @@ def main():
    try:
     d=get(f"{BASE}/{lid}",{"f":"json"})
     out={"id":lid,"name":x.get("name"),"geometryType":d.get("geometryType"),"capabilities":d.get("capabilities"),"extent":d.get("extent"),
-         "displayField":d.get("displayField"),"fields":[{"name":f.get("name"),"alias":f.get("alias")} for f in d.get("fields",[])],"copyright":d.get("copyrightText")}
+         "displayField":d.get("displayField"),"fields":[{"name":f.get("name"),"alias":f.get("alias")} for f in (d.get("fields") or [])],"copyright":d.get("copyrightText")}
     if "Query" in str(d.get("capabilities")) and d.get("type")!="Group Layer":
      try:
       q=get(f"{BASE}/{lid}/query",{"f":"json","where":"1=1","outFields":"*","returnGeometry":"false","resultRecordCount":3})

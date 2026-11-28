@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-11-28T08:00:35.848460+00:00",
+  "generated_at": "2026-11-28T08:39:45.213037+00:00",
   "status": "provisional_real_location_leads_pending_verification",
-  "anchor_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/1",
+  "anchor_source": "https://urplanning.tycg.gov.tw/gisMap/Map.aspx",
   "anchor_parcel": "桃園段中南小段 55-1",
   "anchor_centroid": [
     121.31213676,
     24.99562065
   ],
   "pilot_radius_m": 350,
-  "municipal_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2",
+  "municipal_source": "https://urplanning.tycg.gov.tw/gisMap/Map.aspx",
   "osm_source": "https://www.openstreetmap.org/copyright",
-  "osm_ways_in_export": 82,
-  "commercial_polygons_selected": 40,
+  "osm_ways_in_export": 87,
+  "commercial_polygons_selected": 35,
   "red_scope_rule": "at least 95% footprint overlap; 100% inside municipal commercial polygon",
   "buildings_wholly_inside_commercial_and_radius": 9,
   "candidate_count": 1,
@@ -46,5 +46,29 @@
     "Official plan effective version and zoning crosscheck",
     "Cadastral boundaries for each group",
     "Field review"
-  ]
+  ],
+  "official_query": {
+    "map_url": "https://urplanning.tycg.gov.tw/gisMap/Map.aspx",
+    "district": "桃園區",
+    "zone": "商業區",
+    "anchor_section": "0002",
+    "anchor_land": "00550001",
+    "plan_name": "桃園市都市計畫",
+    "plan_reference": "桃園都市擴大修訂計畫",
+    "plan_pdf": "https://urplanning.tycg.gov.tw/tycgfiles/Plans/Final/PF000002000064.pdf",
+    "plan_map": "https://urplanning.tycg.gov.tw/tycgfiles/Plans/Final/PF000003000059.PDF",
+    "plan_publish_field": "061/01/12",
+    "parcel_response_sha256": "bec5eb2b216c33240424ff5111c9ab6531116acf9bc969272dab35c97631e9ed",
+    "usezone_response_sha256": "6f07d686dda61c4d77f881e035824ecbb8d0b659525b629144a08ff8af0dda19",
+    "commercial_response_sha256": "48aa4d4c7feee8ca7244dee276258c1c622a7444762ae22b67b9380c73a63e4a",
+    "commercial_polygon_count": 138,
+    "legal_verification": "pending_effective_plan_and_reuse_review"
+  },
+  "osm_query": {
+    "endpoint": "https://overpass-api.de/api/interpreter",
+    "query": "[out:json][timeout:45];way[\"building\"](24.9924675,121.3086714,24.9987738,121.3156021);out geom;",
+    "response_sha256": "8254b34b84e2c2830b32523c1c780aa98822a0981c6ebb0d68de832046dbba29",
+    "osm_timestamp": "2026-11-28T08:38:34Z",
+    "license": "ODbL; © OpenStreetMap contributors"
+  }
 }

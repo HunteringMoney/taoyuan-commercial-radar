@@ -17,6 +17,11 @@ on:
       - 'scripts/test_pilot_scout.py'
       - 'scripts/pilot_scout.py'
       - 'scripts/notify_verified_targets.py'
+      - 'scripts/probe_official_network.py'
+      - 'scripts/refresh_pilot.py'
+      - 'scripts/sync_pilot_snapshot.py'
+      - 'scripts/test_sync_pilot_snapshot.py'
+      - 'docs/index.html'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -24,7 +29,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -44,7 +49,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install geometry and image test dependencies
-        run: python -m pip install 'shapely>=2,<3' 'numpy>=2,<3' 'opencv-python-headless>=4.10,<5'
+        run: python -m pip install 'shapely>=2,<3' 'numpy>=2,<3' 'opencv-python-headless>=4.10,<5' 'pyproj>=3.6,<4'
       - name: Test official commercial boundary safety gates
         run: cd scripts && python -m unittest test_boundary.py -v
       - name: Test screened building clusters (synthetic data only)
@@ -53,6 +58,8 @@ jobs:
         run: cd scripts && python -m unittest test_pilot_georeference.py -v
       - name: Test pilot zoning and red-mask joint filter (synthetic data only)
         run: cd scripts && python -m unittest test_pilot_scout.py -v
+      - name: Test provisional snapshot fail-closed publishing
+        run: cd scripts && python -m unittest test_sync_pilot_snapshot.py -v
       - name: Validate integration scoring rules
         run: python scripts/integration_scoring.py
       - name: Discover official GIS schema (never publish unverified targets)
@@ -87,6 +94,32 @@ jobs:
           retention-days: 14
       - name: Inspect official UPGIS zoning layer service
         run: python scripts/inspect_official_planning_service.py
+      - name: Diagnose official GIS network path
+        if: github.event_name != 'schedule'
+        run: python scripts/probe_official_network.py
+      - name: Refresh provisional pilot from official map and OSM
+        run: python scripts/refresh_pilot.py --output "$RUNNER_TEMP/pilot_scout_candidates.json" --report "$RUNNER_TEMP/pilot_refresh_report.json"
+      - name: Upload provisional pilot refresh
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: provisional-pilot-refresh
+          path: |
+            ${{ runner.temp }}/pilot_scout_candidates.json
+            ${{ runner.temp }}/pilot_refresh_report.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Update public pilot status and pending leads
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          python scripts/sync_pilot_snapshot.py --result "$RUNNER_TEMP/pilot_scout_candidates.json" --report "$RUNNER_TEMP/pilot_refresh_report.json" --docs docs
+          git add docs/pilot_scout_candidates.json docs/pilot_refresh_status.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update provisional Taoyuan pilot refresh status"
+            git push origin HEAD:main
+          fi
       - name: Upload UPGIS layer schema report
         if: always()
         uses: actions/upload-artifact@v4

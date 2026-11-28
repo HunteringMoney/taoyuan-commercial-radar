@@ -2,7 +2,14 @@
 
 最後更新：2026-11-28（台灣時間）
 
-## 2026-11-28 最新實測：本機可連線，GitHub Actions 仍逾時
+## 2026-11-28 雲端修復與目前驗收
+
+- GitHub runner 到 `urbandatasrv.tycg.gov.tw` 的 TCP 連線會逾時；單純增加等待時間無法解決。改從市府公開圖台同站的 `gisMap/ajax/datahandler.ashx` 取得圖台查詢結果，於測試分支 [Actions run 46127241693](https://github.com/HunteringMoney/taoyuan-commercial-radar/actions/runs/46127241693) 成功重建 1 筆待查建物群。
+- 圖台以 `GetRegionBySectLand` 回傳桃園段中南小段 55-1 地籍圖形、`GetUsezoneBySectLand` 回傳錨點「商業區」及都市計畫書圖連結，`GetDistSectLandUseByAreaFilter` 回傳桃園區商業區分布圖形。原始 TWD97 TM2 (EPSG:3826) WKT 轉為 WGS84 GeoJSON；每次重查並檢查地號、商業區文字與錨點落在圖形內。這是市府圖台的查詢輸出，**尚未核實最新公告計畫版本及批次再利用授權**。
+- OSM Overpass 偶發 HTTP 502，程式改用第二個公開端點備援，並對回傳筆數設合理下限。更新失敗時保留前次待查線索、顯示失敗狀態，且不修改 `docs/targets.json`。
+- 目前可驗收的是「地圖控制點校正、官方圖台與 OSM 交集、可定位待查街廓、雲端試跑與頁面顯示」。**尚未驗收**最新法定分區、候選建物逐筆地籍、屋齡、道路條件、所有權與基地整合可行性；不能當作正式開發名單或危老資格。
+
+## 2026-11-28 早期實測：本機可連線，GitHub Actions 直接服務逾時
 
 - Mac 本機連接市府 `TY_UPGIS/TYMap_SDE/MapServer` 回應 HTTP 200；第 1 層地籍圖 `section='0002' AND LANDNO8='00550001'` 唯一查得桃園段中南小段 55-1，多邊形質心 `(121.31213676,24.99562065)`。第 2 層都市計畫使用分區在地號中心及試驗候選中心均回傳 `LANDUSE=商業區`、`MUPLAN=桃園市都市計畫`。
 - 使用者截圖以七個市府使用分區圖形角點配準，留一誤差最高 2.00 公尺，已產生 106 個**草稿**紅區 GeoJSON 多邊形。與當下市府商業區圖形交集約 93.67%，另有約 8 平方公尺碰到住宅區邊界；搜尋程式必須同時以市府商業區圖形全包含建物，才可形成待查線索。

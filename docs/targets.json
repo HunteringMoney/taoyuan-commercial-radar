@@ -1,9 +1,10 @@
 {
   "generated_at": null,
   "verification_status": "pilot_local_data_connected_pending_official_validation",
-  "cloud_gis_status": "unreachable_timeout_2026-11-28",
-  "pilot_candidates_file": "pilot_scout_candidates.json",
+  "direct_gis_status": "github_runner_connection_timeout_2026-11-28",
+  "pilot_refresh_status_file": "pilot_refresh_status.json",
   "district": "桃園區",
   "allowed_zone": "商業區",
-  "targets": []
+  "targets": [],
+  "pilot_candidates_file": "pilot_scout_candidates.json"
 }

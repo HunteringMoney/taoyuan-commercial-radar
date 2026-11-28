@@ -17,6 +17,7 @@ on:
       - 'scripts/test_pilot_scout.py'
       - 'scripts/pilot_scout.py'
       - 'scripts/notify_verified_targets.py'
+      - 'scripts/probe_official_network.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -87,6 +88,9 @@ jobs:
           retention-days: 14
       - name: Inspect official UPGIS zoning layer service
         run: python scripts/inspect_official_planning_service.py
+      - name: Diagnose official GIS network path
+        if: github.event_name != 'schedule'
+        run: python scripts/probe_official_network.py
       - name: Upload UPGIS layer schema report
         if: always()
         uses: actions/upload-artifact@v4

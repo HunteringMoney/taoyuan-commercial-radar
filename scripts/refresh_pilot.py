@@ -117,6 +117,8 @@ def fetch_osm(anchor, radius_m=350):
             data = json.loads(raw)
             if "elements" not in data or data.get("remark"):
                 raise ValueError("OSM building query incomplete or failed")
+            if len(data["elements"]) < 20:
+                raise ValueError("OSM pilot response unexpectedly small")
             return data, {"endpoint": endpoint, "query": query, "response_sha256": hashlib.sha256(raw).hexdigest(),
                           "osm_timestamp": data.get("osm3s", {}).get("timestamp_osm_base"),
                           "license": "ODbL; © OpenStreetMap contributors", "prior_endpoint_errors": errors}
@@ -134,6 +136,10 @@ def refresh(red_scope, output, report_path):
         osm, osm_meta = fetch_osm(anchor)
         red = json.loads(Path(red_scope).read_text(encoding="utf-8"))
         _, candidates = build(zones, parcel, osm, red)
+        # The scout engine's standalone default points at the direct ArcGIS
+        # layer. This refresh used the public city map's same-host queries.
+        candidates["anchor_source"] = official_meta["map_url"]
+        candidates["municipal_source"] = official_meta["map_url"]
         candidates["official_query"] = official_meta
         candidates["osm_query"] = osm_meta
         Path(output).parent.mkdir(parents=True, exist_ok=True)

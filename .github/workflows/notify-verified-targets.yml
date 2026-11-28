@@ -19,6 +19,9 @@ on:
       - 'scripts/notify_verified_targets.py'
       - 'scripts/probe_official_network.py'
       - 'scripts/refresh_pilot.py'
+      - 'scripts/sync_pilot_snapshot.py'
+      - 'scripts/test_sync_pilot_snapshot.py'
+      - 'docs/index.html'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -26,7 +29,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -55,6 +58,8 @@ jobs:
         run: cd scripts && python -m unittest test_pilot_georeference.py -v
       - name: Test pilot zoning and red-mask joint filter (synthetic data only)
         run: cd scripts && python -m unittest test_pilot_scout.py -v
+      - name: Test provisional snapshot fail-closed publishing
+        run: cd scripts && python -m unittest test_sync_pilot_snapshot.py -v
       - name: Validate integration scoring rules
         run: python scripts/integration_scoring.py
       - name: Discover official GIS schema (never publish unverified targets)
@@ -104,6 +109,17 @@ jobs:
             ${{ runner.temp }}/pilot_refresh_report.json
           if-no-files-found: warn
           retention-days: 14
+      - name: Update public pilot status and pending leads
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          python scripts/sync_pilot_snapshot.py --result "$RUNNER_TEMP/pilot_scout_candidates.json" --report "$RUNNER_TEMP/pilot_refresh_report.json" --docs docs
+          git add docs/pilot_scout_candidates.json docs/pilot_refresh_status.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update provisional Taoyuan pilot refresh status"
+            git push origin HEAD:main
+          fi
       - name: Upload UPGIS layer schema report
         if: always()
         uses: actions/upload-artifact@v4

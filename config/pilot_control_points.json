@@ -4,8 +4,16 @@
   "anchor_locator": {
     "parcel": "桃園段中南小段55-1",
     "official_centroid_lon_lat": [121.31213676, 24.99562065],
-    "image_pin_approx_pixel": [502, 225],
+    "image_pin_approx_pixel": [502, 263],
     "note": "The drawn pin is not an independently identified parcel corner or control point."
   },
-  "control_points": []
+  "control_points": [
+    {"pixel_x": 438, "pixel_y": 53, "longitude": 121.31075651, "latitude": 24.99984835, "feature_description": "北側紅色街廓與道路交角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"},
+    {"pixel_x": 246, "pixel_y": 190, "longitude": 121.30665870, "latitude": 24.99717207, "feature_description": "西北側紅色街廓轉角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"},
+    {"pixel_x": 540, "pixel_y": 174, "longitude": 121.31295705, "latitude": 24.99748172, "feature_description": "東北側紅色街廓與道路交角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"},
+    {"pixel_x": 235, "pixel_y": 445, "longitude": 121.30644017, "latitude": 24.99219080, "feature_description": "西側南段紅色街廓轉角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"},
+    {"pixel_x": 270, "pixel_y": 590, "longitude": 121.30719601, "latitude": 24.98937471, "feature_description": "西南側紅色街廓轉角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"},
+    {"pixel_x": 707, "pixel_y": 540, "longitude": 121.31654185, "latitude": 24.99035078, "feature_description": "東南側紅色街廓轉角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"},
+    {"pixel_x": 763, "pixel_y": 506, "longitude": 121.31774937, "latitude": 24.99102999, "feature_description": "東側紅色街廓轉角，與官方使用分區頂點目視對合", "source_url": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2"}
+  ]
 }

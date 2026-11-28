@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T07:49:52.269277+00:00",
+  "generated_at": "2026-11-28T08:00:35.848460+00:00",
   "status": "provisional_real_location_leads_pending_verification",
   "anchor_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/1",
   "anchor_parcel": "桃園段中南小段 55-1",
@@ -12,19 +12,19 @@
   "osm_source": "https://www.openstreetmap.org/copyright",
   "osm_ways_in_export": 82,
   "commercial_polygons_selected": 40,
-  "buildings_wholly_inside_commercial_and_radius": 14,
+  "red_scope_rule": "at least 95% footprint overlap; 100% inside municipal commercial polygon",
+  "buildings_wholly_inside_commercial_and_radius": 9,
   "candidate_count": 1,
   "targets": [
     {
       "id": "scout-001",
       "latitude": 24.9961143,
       "longitude": 121.3126472,
-      "building_footprint_count": 6,
-      "approx_total_roof_footprint_m2": 3080.2,
+      "building_footprint_count": 5,
+      "approx_total_roof_footprint_m2": 2433.9,
       "status": "pending_official_zoning_and_field_review",
-      "zone_basis": "municipal GIS live layer; plan version and screenshot alignment pending",
+      "zone_basis": "municipal GIS live layer and registered screenshot draft; legal plan version pending",
       "source_building_ids": [
-        1302296903,
         1302296904,
         1302296905,
         1302296906,
@@ -42,7 +42,7 @@
     }
   ],
   "pending": [
-    "Screenshot control-point registration",
+    "Independent review of the seven screenshot control points",
     "Official plan effective version and zoning crosscheck",
     "Cadastral boundaries for each group",
     "Field review"

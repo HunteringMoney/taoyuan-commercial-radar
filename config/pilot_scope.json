@@ -19,8 +19,14 @@
     "source": "2026-11-28 使用者提供、圖面標示桃園段中南小段55-1地號",
     "image_sha256": "3dade1e01de1553a757f5c2dfcdb1b53e61a361812cbf3301e388b562373d404",
     "image_pixels": [886, 726],
-    "georeferenced": false,
-    "polygon_file": null
+    "georeferenced": true,
+    "georeference_status": "draft_registered_to_municipal_map_not_legal_boundary",
+    "control_points_file": "config/pilot_control_points.json",
+    "control_point_count": 7,
+    "max_leave_one_out_error_m": 2.0,
+    "polygon_file": "docs/pilot_red_draft.geojson",
+    "official_commercial_overlap_fraction": 0.9367,
+    "official_residential_overlap_m2_approx": 8
   },
   "permitted_zone": "商業區",
   "exclude_zones": [
@@ -30,10 +36,9 @@
   ],
   "release_status": "provisional_scout_only_pending_screenshot_registration_and_plan_review",
   "next_steps": [
-    "用地籍圖定位55-1取得可查核座標",
-    "用官方都市計畫分區圖核對圖例、計畫版本及紅色區塊",
-    "使用至少3個以上分布良好的控制點校正截圖並量化誤差",
-    "將紅色街廓轉為初步GIS多邊形，再和法定商業區官方資料交叉核對",
+    "獨立複核七個影像控制點和官方都市計畫公告版本",
+    "向主管機關確認圖層使用授權與法定分區證明",
+    "候選建物群與正式地籍逐一人工交叉核對",
     "在驗證完成前只能生成待查勘線索，不得發布為官方驗證基地"
   ]
 }

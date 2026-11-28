@@ -1,0 +1,22 @@
+{
+  "checked_at_taipei": "2026-11-28",
+  "status": "draft_georeferenced_pending_legal_plan_review",
+  "screenshot_sha256": "3dade1e01de1553a757f5c2dfcdb1b53e61a361812cbf3301e388b562373d404",
+  "screenshot_path": "docs/assets/pilot_zoning_screenshot.png",
+  "control_point_count": 7,
+  "control_point_source": "municipal zoning MapServer layer 2 polygon corners, manually matched after raster registration",
+  "leave_one_out_errors_m": [1.18, 0.61, 1.36, 1.08, 0.97, 1.71, 2.0],
+  "max_leave_one_out_error_m": 2.0,
+  "draft_red_polygon_count": 106,
+  "draft_red_area_m2_approx": 537448,
+  "municipal_commercial_overlap_m2_approx": 503416,
+  "municipal_commercial_overlap_fraction": 0.9367,
+  "municipal_residential_overlap_m2_approx": 8,
+  "municipal_zoning_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/2",
+  "municipal_cadastral_source": "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/TYMap_SDE/MapServer/1",
+  "limits": [
+    "Control points and reference zoning polygons come from the same service; independent absolute position review remains pending.",
+    "This is a GIS registration comparison, not a statutory zoning certificate or cadastral area calculation.",
+    "Effective plan date, source reuse terms, and candidate parcel boundaries remain pending."
+  ]
+}

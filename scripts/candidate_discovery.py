@@ -90,7 +90,7 @@ def discover(commercial, buildings, min_buildings=3, gap_m=8, zoning_verified=Tr
             "building_footprint_count":len(indices),
             "approx_total_roof_footprint_m2":built_area_m2,
             "status":"screening_only_field_review_required" if zoning_verified else "pending_official_zoning_and_field_review",
-            "zone_basis":"official polygons checked by upstream validator" if zoning_verified else "municipal GIS live layer; plan version and screenshot alignment pending",
+            "zone_basis":"official polygons checked by upstream validator" if zoning_verified else "municipal GIS live layer and registered screenshot draft; legal plan version pending",
             "source_building_ids":[footprint_ids[i] for i in indices if footprint_ids[i] is not None],
             "reason":"相鄰建物輪廓集中，值得現場確認屋齡、道路與地號",
             "disclaimer":"非土地面積、非地籍基地、非危老資格或開發可行性認證"

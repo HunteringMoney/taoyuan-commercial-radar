@@ -14,6 +14,7 @@ on:
       - 'scripts/test_candidate_discovery.py'
       - 'scripts/pilot_georeference.py'
       - 'scripts/test_pilot_georeference.py'
+      - 'scripts/test_pilot_scout.py'
       - 'scripts/pilot_scout.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
@@ -49,6 +50,8 @@ jobs:
         run: cd scripts && python -m unittest test_candidate_discovery.py -v
       - name: Test screenshot calibration and color exclusions (synthetic data only)
         run: cd scripts && python -m unittest test_pilot_georeference.py -v
+      - name: Test pilot zoning and red-mask joint filter (synthetic data only)
+        run: cd scripts && python -m unittest test_pilot_scout.py -v
       - name: Validate integration scoring rules
         run: python scripts/integration_scoring.py
       - name: Discover official GIS schema (never publish unverified targets)

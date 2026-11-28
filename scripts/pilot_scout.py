@@ -18,9 +18,15 @@ MUNICIPAL_URL = "https://urbandatasrv.tycg.gov.tw/server/rest/services/TY_UPGIS/
 OSM_URL = "https://www.openstreetmap.org/copyright"
 
 
-def build(zoning, parcel, osm, radius_m=350, min_buildings=3):
+def build(zoning, parcel, osm, red_scope, radius_m=350, min_buildings=3):
     if len(parcel.get("features", [])) != 1:
         raise ValueError("Expected exactly one official cadastral anchor polygon")
+    if not red_scope.get("features"):
+        raise ValueError("Calibrated red screenshot scope is required")
+    if any(f.get("properties", {}).get("verified_zoning_geometry") is not False
+           for f in red_scope["features"]):
+        raise ValueError("Red screenshot scope must remain a draft, not verified zoning")
+    red_mask = unary_union([shape(f["geometry"]) for f in red_scope["features"]])
     anchor = shape(parcel["features"][0]["geometry"]).centroid
     if parcel["features"][0].get("properties", {}).get("LANDNO8") != "00550001":
         raise ValueError("Anchor parcel identifier mismatch")
@@ -51,6 +57,11 @@ def build(zoning, parcel, osm, radius_m=350, min_buildings=3):
             continue
         if not local_circle.covers(xy_to_meters(geom)) or not boundary.covers(geom):
             continue
+        # Anti-aliased map edges and a few-metre registration error can leave
+        # thin strips outside the red raster. Require at least 95% red overlap;
+        # the whole footprint must still be within the municipal commercial zone.
+        if geom.intersection(red_mask).area / geom.area < 0.95:
+            continue
         buildings.append({"type": "Feature", "properties": {"osm_id": element["id"]}, "geometry": mapping(geom)})
     leads = discover(zones, buildings, min_buildings=min_buildings, zoning_verified=False)
     for lead in leads:
@@ -69,9 +80,10 @@ def build(zoning, parcel, osm, radius_m=350, min_buildings=3):
               "pilot_radius_m": radius_m, "municipal_source": MUNICIPAL_URL,
               "osm_source": OSM_URL, "osm_ways_in_export": len(osm.get("elements", [])),
               "commercial_polygons_selected": len(zones),
+              "red_scope_rule": "at least 95% footprint overlap; 100% inside municipal commercial polygon",
               "buildings_wholly_inside_commercial_and_radius": len(buildings),
               "candidate_count": len(leads), "targets": leads,
-              "pending": ["Screenshot control-point registration", "Official plan effective version and zoning crosscheck", "Cadastral boundaries for each group", "Field review"]}
+              "pending": ["Independent review of the seven screenshot control points", "Official plan effective version and zoning crosscheck", "Cadastral boundaries for each group", "Field review"]}
     return scope, report
 
 
@@ -80,12 +92,13 @@ def main():
     p.add_argument("--zoning", required=True)
     p.add_argument("--parcel", required=True)
     p.add_argument("--osm", required=True)
+    p.add_argument("--red-scope", required=True)
     p.add_argument("--scope-output", required=True)
     p.add_argument("--output", required=True)
     p.add_argument("--radius-m", type=float, default=350)
     p.add_argument("--min-buildings", type=int, default=3)
     a = p.parse_args()
-    inputs = [json.loads(Path(x).read_text(encoding="utf-8")) for x in (a.zoning, a.parcel, a.osm)]
+    inputs = [json.loads(Path(x).read_text(encoding="utf-8")) for x in (a.zoning, a.parcel, a.osm, a.red_scope)]
     scope, report = build(*inputs, radius_m=a.radius_m, min_buildings=a.min_buildings)
     Path(a.scope_output).parent.mkdir(parents=True, exist_ok=True)
     Path(a.output).parent.mkdir(parents=True, exist_ok=True)

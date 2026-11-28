@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T08:39:45.213037+00:00",
+  "generated_at": "2026-11-28T08:58:49.156380+00:00",
   "status": "provisional_real_location_leads_pending_verification",
   "anchor_source": "https://urplanning.tycg.gov.tw/gisMap/Map.aspx",
   "anchor_parcel": "桃園段中南小段 55-1",
@@ -65,10 +65,16 @@
     "legal_verification": "pending_effective_plan_and_reuse_review"
   },
   "osm_query": {
-    "endpoint": "https://overpass-api.de/api/interpreter",
+    "endpoint": "https://ovp.dresel.systems/api-as/interpreter",
     "query": "[out:json][timeout:45];way[\"building\"](24.9924675,121.3086714,24.9987738,121.3156021);out geom;",
-    "response_sha256": "8254b34b84e2c2830b32523c1c780aa98822a0981c6ebb0d68de832046dbba29",
-    "osm_timestamp": "2026-11-28T08:38:34Z",
-    "license": "ODbL; © OpenStreetMap contributors"
+    "response_sha256": "dea84523d7fc813d42b44b194f478324994d0f66211ca4a6d24c95788a39b9bb",
+    "osm_timestamp": "2026-11-27T21:21:21Z",
+    "license": "ODbL; © OpenStreetMap contributors",
+    "prior_endpoint_errors": [
+      {
+        "endpoint": "https://overpass-api.de/api/interpreter",
+        "error": "HTTP Error 502: Bad Gateway"
+      }
+    ]
   }
 }

@@ -16,7 +16,7 @@ from pathlib import Path
 
 from pyproj import Transformer
 from shapely import wkt
-from shapely.geometry import mapping, shape
+from shapely.geometry import Polygon, mapping, shape
 from shapely.ops import transform
 
 from pilot_scout import build
@@ -28,6 +28,7 @@ OVERPASS_ENDPOINTS = (
 )
 PARCEL = {"section": "0002", "land": "00550001"}
 TRANSFORM = Transformer.from_crs("EPSG:3826", "EPSG:4326", always_xy=True)
+TO_LOCAL = Transformer.from_crs("EPSG:4326", "EPSG:3826", always_xy=True)
 
 
 def official_session():
@@ -127,6 +128,45 @@ def fetch_osm(anchor, radius_m=350):
     raise ValueError("All OSM building endpoints failed: " + json.dumps(errors, ensure_ascii=False))
 
 
+def crosscheck_building_points(candidates, osm, opener=None, token=None, query=official_query):
+    """Require each selected building's interior point to return commercial zoning.
+
+    This is a second check within the public map, not legal-plan certification.
+    It records no parcel identifiers in the published candidate file.
+    """
+    if opener is None or token is None:
+        opener, token = official_session()
+    elements = {e["id"]: e for e in osm.get("elements", []) if e.get("type") == "way"}
+    checked = []
+    zone_cache = {}
+    for lead in candidates.get("targets", []):
+        for building_id in lead.get("source_building_ids", []):
+            element = elements.get(building_id)
+            if not element:
+                raise ValueError("Selected building is missing from OSM response")
+            footprint = Polygon([(p["lon"], p["lat"]) for p in element.get("geometry", [])])
+            if footprint.is_empty or not footprint.is_valid or footprint.area <= 0:
+                raise ValueError("Selected building has invalid OSM geometry")
+            point = footprint.representative_point()
+            x, y = TO_LOCAL.transform(point.x, point.y)
+            parcels, point_hash = query(opener, token, "GetSectLandByPoint", x=x, y=y)
+            if len(parcels) != 1 or not parcels[0].get("section") or not parcels[0].get("parno"):
+                raise ValueError("Official point lookup did not return one parcel")
+            section = parcels[0]["section"]
+            land = parcels[0]["parno"].replace("-", "")
+            if (section, land) not in zone_cache:
+                zone_cache[(section, land)] = query(opener, token, "GetUsezoneBySectLand", sect=section, land=land)
+            zones, zone_hash = zone_cache[(section, land)]
+            if not zones or any(row.get("zone_name") != "商業區" for row in zones):
+                raise ValueError("Official point lookup is not wholly commercial")
+            checked.append({"building_id": building_id, "point_lookup_sha256": point_hash,
+                            "zoning_lookup_sha256": zone_hash})
+    if not checked:
+        raise ValueError("No selected buildings to crosscheck")
+    return {"checked_building_count": len(checked), "status": "all_points_commercial_on_public_map",
+            "legal_verification": False, "checks": checked}
+
+
 def refresh(red_scope, output, report_path):
     status = {"checked_at": dt.datetime.now(dt.timezone.utc).isoformat(),
               "status": "failed_closed", "published_official_targets": 0}
@@ -136,6 +176,7 @@ def refresh(red_scope, output, report_path):
         osm, osm_meta = fetch_osm(anchor)
         red = json.loads(Path(red_scope).read_text(encoding="utf-8"))
         _, candidates = build(zones, parcel, osm, red)
+        candidates["official_point_crosscheck"] = crosscheck_building_points(candidates, osm)
         # The scout engine's standalone default points at the direct ArcGIS
         # layer. This refresh used the public city map's same-host queries.
         candidates["anchor_source"] = official_meta["map_url"]

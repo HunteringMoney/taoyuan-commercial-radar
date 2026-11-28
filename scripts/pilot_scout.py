@@ -34,7 +34,7 @@ def build(zoning, parcel, osm, red_scope, radius_m=350, min_buildings=3):
     zones = []
     for feat in zoning.get("features", []):
         props = feat.get("properties") or {}
-        if props.get("LANDUSE") != "商業區" or props.get("MUPLAN") != "桃園市都市計畫":
+        if props.get("LANDUSE") != "商業區":
             continue
         geom = shape(feat["geometry"])
         if geom.is_valid and xy_to_meters(geom).intersects(local_circle):

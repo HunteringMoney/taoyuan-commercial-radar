@@ -18,6 +18,7 @@ on:
       - 'scripts/pilot_scout.py'
       - 'scripts/notify_verified_targets.py'
       - 'scripts/probe_official_network.py'
+      - 'scripts/refresh_pilot.py'
       - '.github/workflows/notify-verified-targets.yml'
   schedule:
     # Taiwan time 09:00 (UTC+8); scheduled Actions may be delayed.
@@ -45,7 +46,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install geometry and image test dependencies
-        run: python -m pip install 'shapely>=2,<3' 'numpy>=2,<3' 'opencv-python-headless>=4.10,<5'
+        run: python -m pip install 'shapely>=2,<3' 'numpy>=2,<3' 'opencv-python-headless>=4.10,<5' 'pyproj>=3.6,<4'
       - name: Test official commercial boundary safety gates
         run: cd scripts && python -m unittest test_boundary.py -v
       - name: Test screened building clusters (synthetic data only)
@@ -91,6 +92,18 @@ jobs:
       - name: Diagnose official GIS network path
         if: github.event_name != 'schedule'
         run: python scripts/probe_official_network.py
+      - name: Refresh provisional pilot from official map and OSM
+        run: python scripts/refresh_pilot.py --output "$RUNNER_TEMP/pilot_scout_candidates.json" --report "$RUNNER_TEMP/pilot_refresh_report.json"
+      - name: Upload provisional pilot refresh
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: provisional-pilot-refresh
+          path: |
+            ${{ runner.temp }}/pilot_scout_candidates.json
+            ${{ runner.temp }}/pilot_refresh_report.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload UPGIS layer schema report
         if: always()
         uses: actions/upload-artifact@v4
